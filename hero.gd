@@ -1,8 +1,13 @@
-extends "res://platformer_controller/platformer_controller.gd"
+class_name Hero
+extends PlatformerController2D
 
+var last_fired_arrow : Arrow
+var prev_frame_arrow : Arrow
 
-var facing_left = false
-var attacking = false
+var facing_left := false
+var attacking := false
+var canTeleport := false
+
 @onready var arrow = preload("res://arrow.tscn")
 @export var arrow_speed = 1000
 
@@ -16,7 +21,7 @@ func _process(_delta):
 	if not is_on_floor():
 		if velocity.y > 0:
 			$AnimationTree["parameters/playback"].travel("fall")
-
+		
 	if facing_left and velocity.x > 0:
 		$AnimatedSprite2D.flip_h = false
 		$AnimatedSprite2D.offset.x = 0
@@ -42,17 +47,31 @@ func _process(_delta):
 	
 	if velocity == Vector2.ZERO:
 		$AnimationTree["parameters/playback"].travel("idle")
+		
+	if last_fired_arrow != null and prev_frame_arrow == null:
+		SignalBus.can_teleport_to_arrow.emit()
+		canTeleport = true
+		
+	if last_fired_arrow == null and canTeleport:
+		SignalBus.cant_teleport_to_arrow.emit()
+		canTeleport = false
+		print("cant tp")
+	
+	prev_frame_arrow = last_fired_arrow
 
 
 func _on_attack_animation_finished():
 	attacking = false
 	var _arrow = arrow.instantiate()
+	last_fired_arrow = _arrow
+	
 	if facing_left:
 		_arrow.position = $AnimatedSprite2D/ArrowSpawnPointLeft.global_position
 		_arrow.direction = Vector2(-1, 0)
 	else:
 		_arrow.position = $AnimatedSprite2D/ArrowSpawnPointRight.global_position
 		_arrow.direction = Vector2(1, 0)
+		
 	get_parent().add_child(_arrow)
 
 func handle_input():
@@ -62,3 +81,9 @@ func handle_input():
 	# keep momentum if jumping
 	elif is_on_floor():
 		acc.x = 0
+		
+	if Input.is_action_just_pressed("teleport"):
+		if last_fired_arrow != null:
+			$AnimationPlayer.play("teleport")
+			position = last_fired_arrow.position
+			last_fired_arrow.remove()

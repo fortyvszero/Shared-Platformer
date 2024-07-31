@@ -1,7 +1,8 @@
-[gd_scene load_steps=64 format=3 uid="uid://ctjvusqt35kt2"]
+[gd_scene load_steps=72 format=3 uid="uid://ctjvusqt35kt2"]
 
 [ext_resource type="Texture2D" uid="uid://dl532sp148k3l" path="res://assets/Base/Spritesheet/Ranger- Base.png" id="1_q7x3r"]
 [ext_resource type="Script" path="res://hero.gd" id="1_wfvqu"]
+[ext_resource type="Texture2D" uid="uid://jtrycglhwdo7" path="res://assets/particle.png" id="3_wn0qm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0au5d"]
 atlas = ExtResource("1_q7x3r")
@@ -424,14 +425,47 @@ tracks/1/keys = {
 "values": ["run"]
 }
 
+[sub_resource type="Animation" id="Animation_82fn6"]
+resource_name = "teleport"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_nu3t3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vwlbi"]
 _data = {
+"RESET": SubResource("Animation_nu3t3"),
 "attack": SubResource("Animation_gid6v"),
 "fall": SubResource("Animation_ljc3n"),
 "idle": SubResource("Animation_m7tru"),
 "jump": SubResource("Animation_1u7eq"),
 "land": SubResource("Animation_mecu2"),
-"run": SubResource("Animation_coon3")
+"run": SubResource("Animation_coon3"),
+"teleport": SubResource("Animation_82fn6")
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ydh76"]
@@ -520,8 +554,41 @@ states/run/position = Vector2(515, -142.391)
 transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_y6hc1"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_6dvy1"), "run", "jump", SubResource("AnimationNodeStateMachineTransition_4qfro"), "idle", "jump", SubResource("AnimationNodeStateMachineTransition_sm7mp"), "jump", "fall", SubResource("AnimationNodeStateMachineTransition_uodfr"), "fall", "land", SubResource("AnimationNodeStateMachineTransition_lnarj"), "land", "run", SubResource("AnimationNodeStateMachineTransition_opm2x"), "land", "idle", SubResource("AnimationNodeStateMachineTransition_wpkm1"), "attack", "run", SubResource("AnimationNodeStateMachineTransition_jfggh"), "attack", "idle", SubResource("AnimationNodeStateMachineTransition_keiiq"), "attack", "fall", SubResource("AnimationNodeStateMachineTransition_md7w8"), "attack", "jump", SubResource("AnimationNodeStateMachineTransition_1ytrs"), "run", "fall", SubResource("AnimationNodeStateMachineTransition_yfirf"), "attack", "land", SubResource("AnimationNodeStateMachineTransition_axlk5"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_804hh")]
 graph_offset = Vector2(-78, -181.337)
 
+[sub_resource type="Curve" id="Curve_sgurp"]
+_data = [Vector2(0.0194175, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.736264), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_dc1lg"]
+curve = SubResource("Curve_sgurp")
+
+[sub_resource type="Gradient" id="Gradient_5lybt"]
+offsets = PackedFloat32Array(0.640449, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_j0srk"]
+gradient = SubResource("Gradient_5lybt")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ky1jk"]
+particle_flag_disable_z = true
+angle_max = 60.0
+spread = 160.0
+flatness = 0.5
+initial_velocity_max = 15.0
+gravity = Vector3(0, -45, 0)
+linear_accel_max = 10.0
+radial_accel_min = 10.0
+radial_accel_max = 10.0
+scale_min = 0.1
+scale_max = 1.5
+color_ramp = SubResource("GradientTexture1D_j0srk")
+alpha_curve = SubResource("CurveTexture_dc1lg")
+hue_variation_max = 0.02
+
 [node name="Hero" type="CharacterBody2D"]
 z_index = 1
+collision_mask = 14
+platform_floor_layers = 4294901768
+platform_wall_layers = 8
 script = ExtResource("1_wfvqu")
 max_jump_height = 70.0
 min_jump_height = 35.0
@@ -566,8 +633,21 @@ position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_ydh76")
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_vwlbi")
+}
 tree_root = SubResource("AnimationNodeStateMachine_2d32k")
 anim_player = NodePath("../AnimationPlayer")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 128
+process_material = SubResource("ParticleProcessMaterial_ky1jk")
+texture = ExtResource("3_wn0qm")
+one_shot = true
+preprocess = 0.2
+explosiveness = 0.5
+randomness = 1.0
 
 [connection signal="hit_ground" from="." to="." method="_on_hit_ground"]
 [connection signal="jumped" from="." to="." method="_on_jumped"]

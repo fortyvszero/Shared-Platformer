@@ -1,3 +1,4 @@
+class_name Arrow
 extends Sprite2D
 
 @export var direction = Vector2(1, 0)
@@ -12,9 +13,12 @@ func _ready():
 func _process(delta):
 	translate(direction * speed * delta)
 
-func _on_visible_on_screen_notifier_2d_screen_exited():
-	queue_free()
-
 func _on_area_2d_body_entered(body):
-	print("TODO: remove me. I've hit: ", body)
+	var enemy = body as Enemy
+	
+	if enemy:
+		enemy.damage(1)
+	remove()
+
+func remove() -> void:
 	queue_free()

@@ -12,15 +12,11 @@ script = ExtResource("2_3fgdk")
 speed = 600
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_mask = 2
+collision_layer = 4
+collision_mask = 14
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(-0.5, 0.5)
 shape = SubResource("RectangleShape2D_rhrv7")
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
-position = Vector2(-0.500001, 0.5)
-scale = Vector2(1.05, 0.35)
-
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

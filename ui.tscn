@@ -1,13 +1,39 @@
-[gd_scene load_steps=2 format=3 uid="uid://w67o1il60bjr"]
+[gd_scene load_steps=5 format=3 uid="uid://w67o1il60bjr"]
 
-[ext_resource type="FontFile" uid="uid://bomppdquag24e" path="res://assets/alagard.ttf" id="1_dg15n"]
+[ext_resource type="Texture2D" uid="uid://bsdx4kukk2vjo" path="res://assets/heart_full.png" id="1_ecp1g"]
+[ext_resource type="Script" path="res://ui.gd" id="1_sqk30"]
+[ext_resource type="Texture2D" uid="uid://bmqor2hk0tu33" path="res://assets/heart_empty.png" id="2_654gt"]
+[ext_resource type="Texture2D" uid="uid://dlmoy0fd638gj" path="res://assets/Base/Arrows/PNGs/Basic Arrow.png" id="3_qcv7d"]
 
 [node name="UI" type="CanvasLayer"]
+script = ExtResource("1_sqk30")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-offset_right = 1920.0
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 40.0
 offset_bottom = 40.0
-theme_override_fonts/normal_font = ExtResource("1_dg15n")
-theme_override_font_sizes/normal_font_size = 12
-text = "
-	SOME UI PLACEHOLDER"
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HeartText1" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_ecp1g")
+
+[node name="HeartTex2" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_ecp1g")
+
+[node name="HeartTex3" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_654gt")
+
+[node name="ArrowTex" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_qcv7d")
+expand_mode = 5
