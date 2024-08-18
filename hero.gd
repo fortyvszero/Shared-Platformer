@@ -28,18 +28,23 @@ func _process(_delta):
 	if not is_on_floor():
 		if velocity.y > 0:
 			$AnimationTree["parameters/playback"].travel("fall")
-		
-	if facing_left and velocity.x > 0:
-		$AnimatedSprite2D.flip_h = false
-		$AnimatedSprite2D.offset.x = 0
-		facing_left = false
+	
+	if velocity.x == 0:
+		# TODO - Make the player (bow and arrow part) face the mouse
+		# Likely need to split the sprite up into 2 parts :/
+		if get_global_mouse_position().x < position.x and not facing_left:
+			# Mouse on left of player and facing right, flip
+			flip_left()
+		elif get_global_mouse_position().x > position.x and facing_left:
+			# Mouse on right of player and facing left, flip
+			flip_right()
+	elif facing_left and velocity.x > 0:
+		flip_right()
 	elif not facing_left and velocity.x < 0:
-		$AnimatedSprite2D.flip_h = true
-		$AnimatedSprite2D.offset.x = -6
-		facing_left = true
+		flip_left()
 
 	if not attacking and Input.is_action_just_pressed("attack"):
-		$AnimationTree["parameters/playback"].start("attack")
+		$AnimationTree["parameters/playback"].start("load_arrow")
 		attacking = true
 		attack_timer.start()
 
@@ -49,25 +54,34 @@ func _process(_delta):
 	# little hack to force the attack animation to play
 	# because occasionally it was getting stuck in an attacking state
 	var anim = $AnimationTree.get("parameters/playback") as AnimationNodeStateMachinePlayback
-	#if attacking and not anim.get_current_node() == "attack":
-		#$AnimationTree["parameters/playback"].start("attack")
+	#if attacking and not anim.get_current_node() == "load_arrow":
+		#$AnimationTree["parameters/playback"].start("load_arrow")
 		
-	if is_on_floor() and velocity.y == 0 and velocity.x != 0:
+	if !attacking and is_on_floor() and velocity.y == 0 and velocity.x != 0:
 		$AnimationTree["parameters/playback"].travel("run")
 	
-	if velocity == Vector2.ZERO:
+	if !attacking and velocity == Vector2.ZERO:
 		$AnimationTree["parameters/playback"].travel("idle")
 		
-	if last_fired_arrow != null and prev_frame_arrow == null:
+	if (last_fired_arrow != null and not last_fired_arrow.has_landed) and (prev_frame_arrow == null or prev_frame_arrow.has_landed):
 		SignalBus.can_teleport_to_arrow.emit()
 		canTeleport = true
 		
-	if last_fired_arrow == null and canTeleport:
+	if (last_fired_arrow == null or last_fired_arrow.has_landed) and canTeleport:
 		SignalBus.cant_teleport_to_arrow.emit()
 		canTeleport = false
-		print("cant tp")
 	
 	prev_frame_arrow = last_fired_arrow
+
+func flip_left():
+	$AnimatedSprite2D.flip_h = true
+	$AnimatedSprite2D.offset.x = -6
+	facing_left = true
+
+func flip_right():
+	$AnimatedSprite2D.flip_h = false
+	$AnimatedSprite2D.offset.x = 0
+	facing_left = false
 
 
 func attack_animation_finished():
@@ -91,7 +105,7 @@ func attack_animation_finished():
 			all_arrows[max_arrows_in_scene].remove()
 		all_arrows.pop_at(max_arrows_in_scene)
 		
-	$AnimationTree["parameters/playback"].start("attack_part_2")
+	$AnimationTree["parameters/playback"].start("fire_arrow")
 	get_parent().add_child(_arrow)
 
 func handle_input():
@@ -103,7 +117,7 @@ func handle_input():
 		acc.x = 0
 		
 	if Input.is_action_just_pressed("teleport"):
-		if last_fired_arrow != null:
+		if last_fired_arrow != null and not last_fired_arrow.has_landed:
 			$AnimationPlayer.play("teleport")
 			position = last_fired_arrow.position
 			last_fired_arrow.remove()

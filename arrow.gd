@@ -6,6 +6,7 @@ extends RigidBody2D
 @export var rotation_inertia = 1000
 @export var strength: float
 var last_pos: Vector2
+@export var has_landed := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +37,7 @@ func detect_collisions():
 	var collisions = get_colliding_bodies()
 	if len(collisions) > 0:
 		set_freeze_enabled(true)
+		has_landed = true
 		for collision in collisions:
 			var enemy = collision as Enemy
 			if enemy:
