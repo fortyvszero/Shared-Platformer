@@ -13,7 +13,13 @@ var attack_strength := 0.1
 var canTeleport := false
 
 @onready var arrow = preload("res://arrow.tscn")
+@onready var teleport_arrow = preload("res://teleport_arrow.tscn")
+@onready var light_arrow = preload("res://light_arrow.tscn")
 @export var arrow_speed = 1000
+
+enum ARROW_TYPE {BASIC, TELEPORT, LIGHT}
+var inventory = {ARROW_TYPE.BASIC: 20, ARROW_TYPE.TELEPORT: 5, ARROW_TYPE.LIGHT: 5}
+var equipped_arrow = ARROW_TYPE.BASIC
 
 func _ready():
 	attack_timer = $AttackTimer
@@ -49,7 +55,7 @@ func _process(_delta):
 		attack_timer.start()
 
 	if attacking and Input.is_action_just_released("attack"):
-		attack_animation_finished()
+		attack_finish()
 
 	# little hack to force the attack animation to play
 	# because occasionally it was getting stuck in an attacking state
@@ -63,11 +69,11 @@ func _process(_delta):
 	if !attacking and velocity == Vector2.ZERO:
 		$AnimationTree["parameters/playback"].travel("idle")
 		
-	if (last_fired_arrow != null and not last_fired_arrow.has_landed) and (prev_frame_arrow == null or prev_frame_arrow.has_landed):
+	if (last_fired_arrow != null and last_fired_arrow.can_teleport) and (prev_frame_arrow == null or not prev_frame_arrow.can_teleport):
 		SignalBus.can_teleport_to_arrow.emit()
 		canTeleport = true
 		
-	if (last_fired_arrow == null or last_fired_arrow.has_landed) and canTeleport:
+	if (last_fired_arrow == null or not last_fired_arrow.can_teleport) and canTeleport:
 		SignalBus.cant_teleport_to_arrow.emit()
 		canTeleport = false
 	
@@ -84,9 +90,17 @@ func flip_right():
 	facing_left = false
 
 
-func attack_animation_finished():
+func attack_finish():
 	attacking = false
-	var _arrow = arrow.instantiate()
+	var _arrow: Node
+	match equipped_arrow:
+		ARROW_TYPE.BASIC:
+			_arrow = arrow.instantiate()
+		ARROW_TYPE.LIGHT:
+			_arrow = light_arrow.instantiate()
+		ARROW_TYPE.TELEPORT:
+			_arrow = teleport_arrow.instantiate()
+
 	_arrow.strength = attack_strength
 	attack_timer.stop()
 	attack_strength = 0.1
@@ -117,11 +131,17 @@ func handle_input():
 		acc.x = 0
 		
 	if Input.is_action_just_pressed("teleport"):
-		if last_fired_arrow != null and not last_fired_arrow.has_landed:
+		if last_fired_arrow != null and last_fired_arrow.can_teleport:
 			$AnimationPlayer.play("teleport")
 			position = last_fired_arrow.position
 			last_fired_arrow.remove()
-
+			
+	if Input.is_action_just_pressed("equip_basic_arrow"):
+		equipped_arrow = ARROW_TYPE.BASIC
+	elif Input.is_action_just_pressed("equip_teleport_arrow"):
+		equipped_arrow = ARROW_TYPE.TELEPORT
+	elif Input.is_action_just_pressed("equip_light_arrow"):
+		equipped_arrow = ARROW_TYPE.LIGHT
 
 func _on_attack_timer_timeout():
 	if attack_strength <= 0.9:

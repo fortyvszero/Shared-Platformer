@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://bu28gton187xh"]
+
+[ext_resource type="Script" path="res://arrow.gd" id="1_pw5ol"]
+[ext_resource type="Texture2D" uid="uid://dqvwt3ngb88cf" path="res://assets/Base/Arrows/PNGs/Poison Arrow.png" id="2_nnq1e"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6188g"]
+absorbent = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rhrv7"]
+size = Vector2(19, 5)
+
+[sub_resource type="Gradient" id="Gradient_w64hq"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0km0t"]
+gradient = SubResource("Gradient_w64hq")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="LightArrow" type="RigidBody2D"]
+collision_layer = 0
+collision_mask = 10
+physics_material_override = SubResource("PhysicsMaterial_6188g")
+gravity_scale = 0.6
+center_of_mass_mode = 1
+center_of_mass = Vector2(5, 0.5)
+max_contacts_reported = 5
+contact_monitor = true
+script = ExtResource("1_pw5ol")
+can_teleport = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_nnq1e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0.5)
+shape = SubResource("RectangleShape2D_rhrv7")
+
+[node name="Lamp" type="PointLight2D" parent="."]
+position = Vector2(8, 0)
+color = Color(1, 0.352941, 0, 1)
+energy = 5.0
+texture = SubResource("GradientTexture2D_0km0t")

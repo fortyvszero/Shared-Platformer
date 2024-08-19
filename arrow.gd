@@ -7,6 +7,8 @@ extends RigidBody2D
 @export var strength: float
 var last_pos: Vector2
 @export var has_landed := false
+@export var can_teleport := true # Set to false by default for non teleport arrows
+@export var damage = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,10 +40,11 @@ func detect_collisions():
 	if len(collisions) > 0:
 		set_freeze_enabled(true)
 		has_landed = true
+		can_teleport = false
 		for collision in collisions:
 			var enemy = collision as Enemy
 			if enemy:
-				enemy.damage(1)
+				enemy.damage(damage)
 				remove()
 
 
