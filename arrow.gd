@@ -14,7 +14,7 @@ var last_pos: Vector2
 func _ready():
 	fire_to_mouse()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	detect_collisions()
 
 

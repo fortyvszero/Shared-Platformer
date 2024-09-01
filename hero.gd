@@ -23,6 +23,8 @@ var equipped_arrow = ARROW_TYPE.BASIC
 
 func _ready():
 	attack_timer = $AttackTimer
+	
+	super()
 
 func _on_hit_ground():
 	$AnimationTree["parameters/playback"].travel("land")
@@ -59,7 +61,7 @@ func _process(_delta):
 
 	# little hack to force the attack animation to play
 	# because occasionally it was getting stuck in an attacking state
-	var anim = $AnimationTree.get("parameters/playback") as AnimationNodeStateMachinePlayback
+	#var anim = $AnimationTree.get("parameters/playback") as AnimationNodeStateMachinePlayback
 	#if attacking and not anim.get_current_node() == "load_arrow":
 		#$AnimationTree["parameters/playback"].start("load_arrow")
 		
@@ -149,4 +151,3 @@ func _on_attack_timer_timeout():
 	
 	if attacking:
 		attack_timer.start()
-
