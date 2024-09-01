@@ -10,6 +10,8 @@
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_sqk30")
+HeartFullImage = ExtResource("1_ecp1g")
+HeartEmptyImage = ExtResource("2_654gt")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 offset_right = 40.0
@@ -23,7 +25,7 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HeartText1" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HeartTex1" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("1_ecp1g")
 
@@ -33,7 +35,7 @@ texture = ExtResource("1_ecp1g")
 
 [node name="HeartTex3" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("2_654gt")
+texture = ExtResource("1_ecp1g")
 
 [node name="ArrowTex" type="TextureRect" parent="MarginContainer/VBoxContainer"]
 visible = false

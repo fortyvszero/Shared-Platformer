@@ -1,8 +1,9 @@
-[gd_scene load_steps=81 format=3 uid="uid://ctjvusqt35kt2"]
+[gd_scene load_steps=82 format=3 uid="uid://ctjvusqt35kt2"]
 
 [ext_resource type="Texture2D" uid="uid://dl532sp148k3l" path="res://assets/Base/Spritesheet/Ranger- Base.png" id="1_q7x3r"]
 [ext_resource type="Script" path="res://game/player/hero.gd" id="1_wfvqu"]
 [ext_resource type="Texture2D" uid="uid://jtrycglhwdo7" path="res://assets/particle.png" id="3_wn0qm"]
+[ext_resource type="Script" path="res://game/player/player_health.gd" id="4_00kyq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o3gtt"]
 atlas = ExtResource("1_q7x3r")
@@ -731,11 +732,14 @@ max_acceleration = 7000
 friction = 200
 jump_buffer = 0.2
 
+[node name="PlayerHealth" type="Node" parent="."]
+script = ExtResource("4_00kyq")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(3, -24)
 sprite_frames = SubResource("SpriteFrames_klj2t")
 animation = &"idle"
-frame = 4
+frame = 3
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",

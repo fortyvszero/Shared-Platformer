@@ -1,7 +1,6 @@
 class_name Enemy
 extends CharacterBody2D
 
-@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var shader_player: AnimationPlayer = $ShaderPlayer
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var movable_ground_cast: RayCast2D = $MovableGroundCast
@@ -34,21 +33,26 @@ func kill() -> void:
 	shader_player.play("dissolve")
 
 func _physics_process(delta):
-	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	velocity.x = SPEED * moveDir.x * delta
 	
-	print(velocity)
-	var collided = move_and_slide()
-
 	if is_on_wall() or !movable_ground_cast.is_colliding():
 		moveDir = -moveDir
 		sprite_2d.flip_h = !sprite_2d.flip_h
 		movable_ground_cast.target_position.x = -movable_ground_cast.target_position.x
+		
+	move_and_slide()
 
 
 func _on_shader_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "dissolve":
 		queue_free()
+
+
+func _on_hurtbox_body_entered(body: Node2D) -> void:
+	var player = body as Hero
+	
+	if player:
+		player.damage()

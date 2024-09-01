@@ -13,6 +13,7 @@ var attack_strength := 0.1
 var canTeleport := false
 
 @onready var teleport_particles: GPUParticles2D = $TeleportParticles
+@onready var player_health: PlayerHealth = $PlayerHealth
 
 @onready var arrow = preload("res://game/player/arrows/arrow.tscn")
 @onready var teleport_arrow = preload("res://game/player/arrows/teleport_arrow.tscn")
@@ -36,7 +37,8 @@ func _on_jumped(_is_ground_jump):
 func _process(_delta):
 	if not is_on_floor():
 		if velocity.y > 0:
-			$AnimationTree["parameters/playback"].travel("fall")
+			if $AnimationPlayer.current_animation != "fall":
+				$AnimationTree["parameters/playback"].travel("fall")
 	
 	if velocity.x == 0:
 		# TODO - Make the player (bow and arrow part) face the mouse
@@ -53,24 +55,21 @@ func _process(_delta):
 		flip_left()
 
 	if not attacking and Input.is_action_just_pressed("attack"):
-		$AnimationTree["parameters/playback"].start("load_arrow")
-		attacking = true
-		attack_timer.start()
+		if $AnimationPlayer.current_animation != "load_arrow":
+			$AnimationTree["parameters/playback"].start("load_arrow")
+			attacking = true
+			attack_timer.start()
 
 	if attacking and Input.is_action_just_released("attack"):
 		attack_finish()
 
-	# little hack to force the attack animation to play
-	# because occasionally it was getting stuck in an attacking state
-	#var anim = $AnimationTree.get("parameters/playback") as AnimationNodeStateMachinePlayback
-	#if attacking and not anim.get_current_node() == "load_arrow":
-		#$AnimationTree["parameters/playback"].start("load_arrow")
-		
 	if !attacking and is_on_floor() and velocity.y == 0 and velocity.x != 0:
-		$AnimationTree["parameters/playback"].travel("run")
+		if $AnimationPlayer.current_animation != "run":
+			$AnimationTree["parameters/playback"].travel("run")
 	
 	if !attacking and velocity == Vector2.ZERO:
-		$AnimationTree["parameters/playback"].travel("idle")
+		if $AnimationPlayer.current_animation != "idle": # Fix bug where on startup there would be an infinite loop of trying to set the idle state
+			$AnimationTree["parameters/playback"].travel("idle")
 		
 	if (last_fired_arrow != null and last_fired_arrow.can_teleport) and (prev_frame_arrow == null or not prev_frame_arrow.can_teleport):
 		SignalBus.can_teleport_to_arrow.emit()
@@ -153,3 +152,7 @@ func _on_attack_timer_timeout():
 	
 	if attacking:
 		attack_timer.start()
+		
+func damage():
+	player_health.change_health(1)
+	SignalBus.hero_health_changed.emit(player_health._currentHealth)
