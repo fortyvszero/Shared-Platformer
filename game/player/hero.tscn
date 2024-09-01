@@ -735,7 +735,7 @@ jump_buffer = 0.2
 position = Vector2(3, -24)
 sprite_frames = SubResource("SpriteFrames_klj2t")
 animation = &"idle"
-frame = 5
+frame = 4
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",

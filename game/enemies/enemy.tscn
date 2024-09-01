@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://2p6a76ig0ee0"]
+[gd_scene load_steps=12 format=3 uid="uid://2p6a76ig0ee0"]
 
 [ext_resource type="Texture2D" uid="uid://c60ht8pl2m588" path="res://assets/Ramses Free Package/Idle/Spr_Idle.png" id="1_fwvh2"]
 [ext_resource type="Script" path="res://game/enemies/enemy.gd" id="1_p6n28"]
@@ -162,11 +162,6 @@ _data = {
 "hit_flash": SubResource("Animation_fcrhu")
 }
 
-[sub_resource type="GDScript" id="GDScript_nmi2d"]
-script/source = "class_name EnemyMovement
-extends Node
-"
-
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 14
@@ -188,6 +183,9 @@ libraries = {
 }
 
 [node name="EnemyMovement" type="Node" parent="."]
-script = SubResource("GDScript_nmi2d")
+
+[node name="MovableGroundCast" type="RayCast2D" parent="."]
+target_position = Vector2(23, 32)
+collision_mask = 11
 
 [connection signal="animation_finished" from="ShaderPlayer" to="." method="_on_shader_player_animation_finished"]
