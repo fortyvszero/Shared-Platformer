@@ -23,7 +23,6 @@ var equipped_arrow = ARROW_TYPE.BASIC
 
 func _ready():
 	attack_timer = $AttackTimer
-	
 	super()
 
 func _on_hit_ground():
@@ -134,7 +133,9 @@ func handle_input():
 		
 	if Input.is_action_just_pressed("teleport"):
 		if last_fired_arrow != null and last_fired_arrow.can_teleport:
-			$AnimationPlayer.play("teleport")
+			$GPUParticles2D.emitting = true
+			
+			print_debug($GPUParticles2D.emitting)
 			position = last_fired_arrow.position
 			last_fired_arrow.remove()
 			
