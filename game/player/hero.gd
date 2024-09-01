@@ -14,6 +14,7 @@ var canTeleport := false
 
 @onready var teleport_particles: GPUParticles2D = $TeleportParticles
 @onready var player_health: PlayerHealth = $PlayerHealth
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 @onready var arrow = preload("res://game/player/arrows/arrow.tscn")
 @onready var teleport_arrow = preload("res://game/player/arrows/teleport_arrow.tscn")
@@ -21,24 +22,27 @@ var canTeleport := false
 @export var arrow_speed = 1000
 
 enum ARROW_TYPE {BASIC, TELEPORT, LIGHT}
+
 var inventory = {ARROW_TYPE.BASIC: 20, ARROW_TYPE.TELEPORT: 5, ARROW_TYPE.LIGHT: 5}
 var equipped_arrow = ARROW_TYPE.BASIC
 
+var _animPlayback
+
 func _ready():
 	attack_timer = $AttackTimer
+	_animPlayback = $AnimationTree["parameters/playback"]
 	super()
 
 func _on_hit_ground():
-	$AnimationTree["parameters/playback"].travel("land")
+	safe_play_animation(&"land")
 
 func _on_jumped(_is_ground_jump):
-	$AnimationTree["parameters/playback"].start("jump")
+	safe_play_animation(&"jump")
 
 func _process(_delta):
 	if not is_on_floor():
 		if velocity.y > 0:
-			if $AnimationPlayer.current_animation != "fall":
-				$AnimationTree["parameters/playback"].travel("fall")
+			safe_play_animation(&"fall")
 	
 	if velocity.x == 0:
 		# TODO - Make the player (bow and arrow part) face the mouse
@@ -55,21 +59,18 @@ func _process(_delta):
 		flip_left()
 
 	if not attacking and Input.is_action_just_pressed("attack"):
-		if $AnimationPlayer.current_animation != "load_arrow":
-			$AnimationTree["parameters/playback"].start("load_arrow")
-			attacking = true
-			attack_timer.start()
+		safe_play_animation(&"load_arrow")
+		attacking = true
+		attack_timer.start()
 
 	if attacking and Input.is_action_just_released("attack"):
 		attack_finish()
 
 	if !attacking and is_on_floor() and velocity.y == 0 and velocity.x != 0:
-		if $AnimationPlayer.current_animation != "run":
-			$AnimationTree["parameters/playback"].travel("run")
+		safe_play_animation(&"run")
 	
 	if !attacking and velocity == Vector2.ZERO:
-		if $AnimationPlayer.current_animation != "idle": # Fix bug where on startup there would be an infinite loop of trying to set the idle state
-			$AnimationTree["parameters/playback"].travel("idle")
+		safe_play_animation(&"idle")
 		
 	if (last_fired_arrow != null and last_fired_arrow.can_teleport) and (prev_frame_arrow == null or not prev_frame_arrow.can_teleport):
 		SignalBus.can_teleport_to_arrow.emit()
@@ -120,8 +121,9 @@ func attack_finish():
 		if all_arrows[max_arrows_in_scene] != null:
 			all_arrows[max_arrows_in_scene].remove()
 		all_arrows.pop_at(max_arrows_in_scene)
-		
-	$AnimationTree["parameters/playback"].start("fire_arrow")
+	
+	safe_play_animation(&"fire_arrow")
+	
 	get_parent().add_child(_arrow)
 
 func handle_input():
@@ -156,3 +158,9 @@ func _on_attack_timer_timeout():
 func damage():
 	player_health.change_health(1)
 	SignalBus.hero_health_changed.emit(player_health._currentHealth)
+
+func safe_play_animation(name: StringName):
+	# Checks the animation isn't already playing and plays it, otherwise it plays every frame!
+	if _animPlayback.get_current_node() != name:
+		_animPlayback.start(name)
+		print("playing animation: ", name)

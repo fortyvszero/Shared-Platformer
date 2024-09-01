@@ -213,7 +213,7 @@ position = Vector2(384, 143)
 position = Vector2(836, 206)
 
 [node name="Hero" parent="." instance=ExtResource("1_v038g")]
-position = Vector2(0, 216)
+position = Vector2(0, 192)
 
 [node name="Camera2D" type="Camera2D" parent="Hero"]
 limit_left = -16
