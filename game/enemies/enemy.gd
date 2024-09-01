@@ -29,14 +29,17 @@ func damage(dmg : int) -> void:
 
 
 func kill() -> void:
-	await get_tree().create_timer(0.5).timeout
+	#await get_tree().create_timer(0.1).timeout
 	shader_player.play("dissolve")
 
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
-
-	velocity.x = SPEED * moveDir.x * delta
+	
+	if current_health > 0:
+		velocity.x = SPEED * moveDir.x * delta
+	else:
+		velocity.x = 0
 	
 	if is_on_wall() or !movable_ground_cast.is_colliding():
 		moveDir = -moveDir
