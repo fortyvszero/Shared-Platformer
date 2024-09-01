@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bu28gton187xh"]
 
-[ext_resource type="Script" path="res://arrow.gd" id="1_pw5ol"]
+[ext_resource type="Script" path="res://game/player/arrows/arrow.gd" id="1_pw5ol"]
 [ext_resource type="Texture2D" uid="uid://dqvwt3ngb88cf" path="res://assets/Base/Arrows/PNGs/Poison Arrow.png" id="2_nnq1e"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6188g"]

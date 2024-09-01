@@ -1,29 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://ciao8xgwtpi8l"]
+[gd_scene load_steps=5 format=3 uid="uid://b32vq74v5njyc"]
 
-[ext_resource type="Texture2D" uid="uid://dlmoy0fd638gj" path="res://assets/Base/Arrows/PNGs/Basic Arrow.png" id="1_t0fwn"]
-[ext_resource type="Script" path="res://arrow.gd" id="2_3fgdk"]
+[ext_resource type="Script" path="res://game/player/arrows/arrow.gd" id="1_q6p5y"]
+[ext_resource type="Texture2D" uid="uid://pekqnp3jlp4o" path="res://assets/Base/Arrows/PNGs/Heavy Arrow.png" id="2_ofi60"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6188g"]
 absorbent = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rhrv7"]
-size = Vector2(19, 5)
+size = Vector2(21, 7)
 
-[node name="Arrow" type="RigidBody2D"]
+[node name="TeleportArrow" type="RigidBody2D"]
 collision_layer = 0
 collision_mask = 10
 physics_material_override = SubResource("PhysicsMaterial_6188g")
 gravity_scale = 0.6
 center_of_mass_mode = 1
 center_of_mass = Vector2(5, 0.5)
-contact_monitor = true
 max_contacts_reported = 5
-script = ExtResource("2_3fgdk")
-can_teleport = false
+contact_monitor = true
+script = ExtResource("1_q6p5y")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_t0fwn")
+texture = ExtResource("2_ofi60")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 0.5)
+position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_rhrv7")

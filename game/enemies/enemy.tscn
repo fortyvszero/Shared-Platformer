@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://2p6a76ig0ee0"]
+[gd_scene load_steps=13 format=3 uid="uid://2p6a76ig0ee0"]
 
 [ext_resource type="Texture2D" uid="uid://c60ht8pl2m588" path="res://assets/Ramses Free Package/Idle/Spr_Idle.png" id="1_fwvh2"]
-[ext_resource type="Script" path="res://enemy.gd" id="1_p6n28"]
+[ext_resource type="Script" path="res://game/enemies/enemy.gd" id="1_p6n28"]
 [ext_resource type="Shader" path="res://assets/Shaders/enemy.gdshader" id="2_h73te"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5wd08"]
@@ -162,6 +162,11 @@ _data = {
 "hit_flash": SubResource("Animation_fcrhu")
 }
 
+[sub_resource type="GDScript" id="GDScript_nmi2d"]
+script/source = "class_name EnemyMovement
+extends Node
+"
+
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 14
@@ -181,5 +186,8 @@ region_rect = Rect2(0, 0, 40, 40)
 libraries = {
 "": SubResource("AnimationLibrary_6xwkf")
 }
+
+[node name="EnemyMovement" type="Node" parent="."]
+script = SubResource("GDScript_nmi2d")
 
 [connection signal="animation_finished" from="ShaderPlayer" to="." method="_on_shader_player_animation_finished"]

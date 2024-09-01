@@ -14,9 +14,9 @@ var canTeleport := false
 
 @onready var teleport_particles: GPUParticles2D = $TeleportParticles
 
-@onready var arrow = preload("res://arrow.tscn")
-@onready var teleport_arrow = preload("res://teleport_arrow.tscn")
-@onready var light_arrow = preload("res://light_arrow.tscn")
+@onready var arrow = preload("res://game/player/arrows/arrow.tscn")
+@onready var teleport_arrow = preload("res://game/player/arrows/teleport_arrow.tscn")
+@onready var light_arrow = preload("res://game/player/arrows/light_arrow.tscn")
 @export var arrow_speed = 1000
 
 enum ARROW_TYPE {BASIC, TELEPORT, LIGHT}

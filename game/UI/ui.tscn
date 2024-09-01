@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://w67o1il60bjr"]
 
 [ext_resource type="Texture2D" uid="uid://bsdx4kukk2vjo" path="res://assets/heart_full.png" id="1_ecp1g"]
-[ext_resource type="Script" path="res://ui.gd" id="1_sqk30"]
+[ext_resource type="Script" path="res://game/UI/ui.gd" id="1_sqk30"]
 [ext_resource type="Texture2D" uid="uid://bmqor2hk0tu33" path="res://assets/heart_empty.png" id="2_654gt"]
 [ext_resource type="Texture2D" uid="uid://dlmoy0fd638gj" path="res://assets/Base/Arrows/PNGs/Basic Arrow.png" id="3_qcv7d"]
 [ext_resource type="Texture2D" uid="uid://pekqnp3jlp4o" path="res://assets/Base/Arrows/PNGs/Heavy Arrow.png" id="4_wy5oc"]

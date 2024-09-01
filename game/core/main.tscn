@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://b47vrxpt12phe"]
 
-[ext_resource type="PackedScene" uid="uid://w67o1il60bjr" path="res://ui.tscn" id="1_8w5kk"]
-[ext_resource type="Script" path="res://main.gd" id="1_hnnia"]
-[ext_resource type="PackedScene" uid="uid://ci02660twh41f" path="res://level_1.tscn" id="2_e4mb5"]
+[ext_resource type="PackedScene" uid="uid://w67o1il60bjr" path="res://game/UI/ui.tscn" id="1_8w5kk"]
+[ext_resource type="Script" path="res://game/core/main.gd" id="1_hnnia"]
+[ext_resource type="PackedScene" uid="uid://ci02660twh41f" path="res://game/levels/level_1.tscn" id="2_e4mb5"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hnnia")

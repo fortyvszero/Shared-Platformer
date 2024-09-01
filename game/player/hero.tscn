@@ -1,7 +1,7 @@
-[gd_scene load_steps=77 format=3 uid="uid://ctjvusqt35kt2"]
+[gd_scene load_steps=81 format=3 uid="uid://ctjvusqt35kt2"]
 
 [ext_resource type="Texture2D" uid="uid://dl532sp148k3l" path="res://assets/Base/Spritesheet/Ranger- Base.png" id="1_q7x3r"]
-[ext_resource type="Script" path="res://hero.gd" id="1_wfvqu"]
+[ext_resource type="Script" path="res://game/player/hero.gd" id="1_wfvqu"]
 [ext_resource type="Texture2D" uid="uid://jtrycglhwdo7" path="res://assets/particle.png" id="3_wn0qm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o3gtt"]
@@ -663,9 +663,9 @@ point_count = 2
 curve = SubResource("Curve_sgurp")
 
 [sub_resource type="Gradient" id="Gradient_5lybt"]
-colors = PackedColorArray(0.82615, 0.792053, 0.787527, 1, 0.332881, 0.332881, 0.332881, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_j0srk"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_7ut02"]
 gradient = SubResource("Gradient_5lybt")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ky1jk"]
@@ -680,11 +680,24 @@ radial_accel_min = 10.0
 radial_accel_max = 10.0
 scale_min = 0.1
 scale_max = 1.5
-color_ramp = SubResource("GradientTexture1D_j0srk")
+color_ramp = SubResource("GradientTexture1D_7ut02")
 alpha_curve = SubResource("CurveTexture_dc1lg")
 hue_variation_max = 0.02
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s4rn8"]
+[sub_resource type="Curve" id="Curve_chjrl"]
+_data = [Vector2(0.0194175, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.736264), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_linoj"]
+curve = SubResource("Curve_chjrl")
+
+[sub_resource type="Gradient" id="Gradient_sb4oa"]
+colors = PackedColorArray(0.877616, 0.877616, 0.877616, 1, 0.281187, 0.281187, 0.281187, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n21ac"]
+gradient = SubResource("Gradient_sb4oa")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_itwx0"]
 particle_flag_disable_z = true
 angle_min = 1.07288e-05
 angle_max = 1.07288e-05
@@ -699,8 +712,8 @@ radial_accel_min = -2.23517e-06
 radial_accel_max = -2.23517e-06
 scale_min = 0.1
 scale_max = 0.25
-color_ramp = SubResource("GradientTexture1D_j0srk")
-alpha_curve = SubResource("CurveTexture_dc1lg")
+color_ramp = SubResource("GradientTexture1D_n21ac")
+alpha_curve = SubResource("CurveTexture_linoj")
 hue_variation_max = 0.02
 
 [node name="Hero" type="CharacterBody2D"]
@@ -721,7 +734,8 @@ jump_buffer = 0.2
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(3, -24)
 sprite_frames = SubResource("SpriteFrames_klj2t")
-animation = &"run"
+animation = &"idle"
+frame = 5
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",
@@ -771,7 +785,7 @@ visibility_rect = Rect2(-26.8631, -51.2042, 55.7505, 62.2175)
 z_index = 1
 emitting = false
 amount = 16
-process_material = SubResource("ParticleProcessMaterial_s4rn8")
+process_material = SubResource("ParticleProcessMaterial_itwx0")
 texture = ExtResource("3_wn0qm")
 preprocess = 0.2
 explosiveness = 0.5
