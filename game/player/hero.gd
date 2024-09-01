@@ -15,6 +15,7 @@ var canTeleport := false
 @onready var teleport_particles: GPUParticles2D = $TeleportParticles
 @onready var player_health: PlayerHealth = $PlayerHealth
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var fx_player: AnimationPlayer = $FxPlayer
 
 @onready var arrow = preload("res://game/player/arrows/arrow.tscn")
 @onready var teleport_arrow = preload("res://game/player/arrows/teleport_arrow.tscn")
@@ -158,6 +159,7 @@ func _on_attack_timer_timeout():
 func damage():
 	player_health.change_health(1)
 	SignalBus.hero_health_changed.emit(player_health._currentHealth)
+	fx_player.play(&"hit_flash")
 
 func safe_play_animation(name: StringName):
 	# Checks the animation isn't already playing and plays it, otherwise it plays every frame!
