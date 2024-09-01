@@ -12,6 +12,8 @@ var attack_timer : Timer
 var attack_strength := 0.1
 var canTeleport := false
 
+@onready var teleport_particles: GPUParticles2D = $TeleportParticles
+
 @onready var arrow = preload("res://arrow.tscn")
 @onready var teleport_arrow = preload("res://teleport_arrow.tscn")
 @onready var light_arrow = preload("res://light_arrow.tscn")
@@ -133,9 +135,8 @@ func handle_input():
 		
 	if Input.is_action_just_pressed("teleport"):
 		if last_fired_arrow != null and last_fired_arrow.can_teleport:
-			$GPUParticles2D.emitting = true
+			teleport_particles.emitting = true
 			
-			print_debug($GPUParticles2D.emitting)
 			position = last_fired_arrow.position
 			last_fired_arrow.remove()
 			
